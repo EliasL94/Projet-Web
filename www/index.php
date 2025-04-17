@@ -54,6 +54,9 @@
     <button id="location-button" class="location-button" title="Trouver ma position">
         <i class="fas fa-location-arrow"></i>
     </button>
+    <button id="search-toggle-button" class="search-toggle-button" title="Rechercher des fontaines">
+        <i class="fas fa-search"></i>
+    </button>
     
     
     
@@ -64,6 +67,9 @@
     <div class="search-container">
         <div class="search-header">
             <h2 class="search-title">Recherche de fontaines</h2>
+            <button class="close-search-button">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <form id="search-form">
             <div class="form-group">
@@ -72,67 +78,66 @@
                     <input type="text" id="search-text" name="search" placeholder="Rue, arrondissement, type..." value="<?php echo htmlspecialchars($searchQuery); ?>">
                 </div>
             </div>
-        
-        <div class="form-group">
-            <label>Type de fontaine</label>
-            <div class="checkbox-group scrollable" id="fountain-types">
-                <!-- Sera rempli dynamiquement -->
+            <div class="form-group">
+                <label>Type de fontaine</label>
+                <div class="checkbox-group scrollable" id="fountain-types">
+                    <!-- Sera rempli dynamiquement -->
+                </div>
             </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="district-select">Arrondissement</label>
-            <select id="district-select" name="district">
-                <option value="">Tous les arrondissements</option>
-                <!-- Sera rempli dynamiquement -->
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="model-select">Modèle de fontaine</label>
-            <select id="model-select" name="model">
-                <option value="">Tous les modèles</option>
-                <!-- Sera rempli dynamiquement -->
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="available-select">Disponibilité</label>
-            <select id="available-select" name="available">
-                <option value="">Toutes</option>
-                <option value="1">Disponibles uniquement</option>
-                <option value="0">Non disponibles uniquement</option>
-            </select>
-        </div>
-        
-        <div class="form-group location-filter">
-            <label for="use-location">Utiliser ma position</label>
-            <label class="switch">
-                <input type="checkbox" id="use-location" <?php echo ($userLat && $userLon) ? 'checked' : ''; ?>>
-                <span class="slider round"></span>
-            </label>
-        </div>
-        
-        <div class="form-group distance-filter" style="display: <?php echo ($userLat && $userLon) ? 'block' : 'none'; ?>;">
-            <label for="max-distance">Distance maximum (m)</label>
-            <div class="distance-slider-container">
-                <input type="range" id="max-distance" name="maxDistance" min="100" max="5000" step="100" value="1000">
-                <span id="distance-value">1000 m</span>
+            
+            <div class="form-group">
+                <label for="district-select">Arrondissement</label>
+                <select id="district-select" name="district">
+                    <option value="">Tous les arrondissements</option>
+                    <!-- Sera rempli dynamiquement -->
+                </select>
             </div>
-        </div>
-        
-        <div class="form-group">
-            <label for="sort-select">Trier par</label>
-            <select id="sort-select" name="sort">
-                <option value="type">Type de fontaine</option>
-                <option value="district">Arrondissement</option>
-                <option value="model">Modèle</option>
-                <option value="availability">Disponibilité</option>
-                <option value="distance" <?php echo ($userLat && $userLon) ? '' : 'disabled'; ?>>Distance</option>
-            </select>
-        </div>
-        
-        <div class="form-actions">
+            
+            <div class="form-group">
+                <label for="model-select">Modèle de fontaine</label>
+                <select id="model-select" name="model">
+                    <option value="">Tous les modèles</option>
+                    <!-- Sera rempli dynamiquement -->
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="available-select">Disponibilité</label>
+                <select id="available-select" name="available">
+                    <option value="">Toutes</option>
+                    <option value="1">Disponibles uniquement</option>
+                    <option value="0">Non disponibles uniquement</option>
+                </select>
+            </div>
+            
+            <div class="form-group location-filter">
+                <label for="use-location">Utiliser ma position</label>
+                <label class="switch">
+                    <input type="checkbox" id="use-location" <?php echo ($userLat && $userLon) ? 'checked' : ''; ?>>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            
+            <div class="form-group distance-filter" style="display: <?php echo ($userLat && $userLon) ? 'block' : 'none'; ?>;">
+                <label for="max-distance">Distance maximum (m)</label>
+                <div class="distance-slider-container">
+                    <input type="range" id="max-distance" name="maxDistance" min="100" max="5000" step="100" value="1000">
+                    <span id="distance-value">1000 m</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="sort-select">Trier par</label>
+                <select id="sort-select" name="sort">
+                    <option value="type">Type de fontaine</option>
+                    <option value="district">Arrondissement</option>
+                    <option value="model">Modèle</option>
+                    <option value="availability">Disponibilité</option>
+                    <option value="distance" <?php echo ($userLat && $userLon) ? '' : 'disabled'; ?>>Distance</option>
+                </select>
+            </div>
+            
+            <div class="form-actions">
             <button type="submit" class="search-button">
                 <i class="fas fa-search"></i> Rechercher
                 </button>
@@ -279,7 +284,7 @@
                     if (adresse) popupContent += `Adresse: ${adresse}<br>`;
                     
                     if (fountain.commune) popupContent += `Arrondissement: ${fountain.commune}<br>`;
-                    if (fountain.dispo) popupContent += `Disponible: ${fountain.dispo === "OUI" ? "✅ Oui" : "❌ Non"}<br>`;
+                    if (fountain.dispo) popupContent += `Disponible: ${(fountain.dispo.trim().toUpperCase() === "OUI") ? "✅ Oui" : "❌ Non"}<br>`;
                     
                     popupContent += `<button class="route-button" onclick="calculateRoute(${lat}, ${lon})">
                         <i class="fas fa-route"></i> Itinéraire
@@ -494,252 +499,334 @@
         }
         
         init();
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchForm = document.getElementById('search-form');
-        const useLocationCheckbox = document.getElementById('use-location');
-        const distanceFilter = document.querySelector('.distance-filter');
-        const distanceSlider = document.getElementById('max-distance');
-        const distanceValue = document.getElementById('distance-value');
-        const sortSelect = document.getElementById('sort-select');
-        const resultsList = document.getElementById('results-list');
-        const resultsCount = document.getElementById('results-count');
-        const fountainTypesContainer = document.getElementById('fountain-types');
-        const districtSelect = document.getElementById('district-select');
-        const modelSelect = document.getElementById('model-select');
-        const searchToggleButton = document.getElementById('search-toggle-button');
-        const searchContainer = document.querySelector('.search-container');
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('search-form');
+            const useLocationCheckbox = document.getElementById('use-location');
+            const distanceFilter = document.querySelector('.distance-filter');
+            const distanceSlider = document.getElementById('max-distance');
+            const distanceValue = document.getElementById('distance-value');
+            const sortSelect = document.getElementById('sort-select');
+            const resultsList = document.getElementById('results-list');
+            const resultsCount = document.getElementById('results-count');
+            const fountainTypesContainer = document.getElementById('fountain-types');
+            const districtSelect = document.getElementById('district-select');
+            const modelSelect = document.getElementById('model-select');
+            const searchToggleButton = document.getElementById('search-toggle-button');
+            const searchContainer = document.querySelector('.search-container');
 
-        let userPosition = null;
+            let userPosition = null;
 
-        loadFountainTypes();
-        loadDistricts();
-        loadModels();
+            loadFountainTypes();
+            loadDistricts();
+            loadModels();
 
-        useLocationCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                getLocation();
-                distanceFilter.style.display = 'block';
-                sortSelect.querySelector('option[value="distance"]').disabled = false;
-            } else {
-                distanceFilter.style.display = 'none';
-                sortSelect.querySelector('option[value="distance"]').disabled = true;
-                if (sortSelect.value === 'distance') sortSelect.value = 'type';
+            useLocationCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    getLocation();
+                    distanceFilter.style.display = 'block';
+                    sortSelect.querySelector('option[value="distance"]').disabled = false;
+                } else {
+                    distanceFilter.style.display = 'none';
+                    sortSelect.querySelector('option[value="distance"]').disabled = true;
+                    if (sortSelect.value === 'distance') sortSelect.value = 'type';
+                }
+            });
+
+            distanceSlider.addEventListener('input', function() {
+                distanceValue.textContent = this.value + ' m';
+            });
+
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                searchFountains();
+            });
+
+            searchForm.addEventListener('reset', function() {
+                setTimeout(() => {
+                    resultsList.innerHTML = '';
+                    resultsCount.textContent = '(0)';
+                    useLocationCheckbox.checked = false;
+                    distanceFilter.style.display = 'none';
+                    sortSelect.querySelector('option[value="distance"]').disabled = true;
+                    document.querySelectorAll('#fountain-types input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
+                }, 10);
+            });
+
+            searchToggleButton.addEventListener('click', function() {
+                searchContainer.classList.toggle('active');
+                if (searchContainer.classList.contains('active')) {
+                    // Si le panneau est activé, rechargez les résultats si nécessaire
+                    if (resultsList.children.length === 0) {
+                        searchFountains();
+                    }
+                }
+            });
+
+            closeSearchButton.addEventListener('click', function() {
+                searchContainer.classList.remove('active');
+            });
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    return new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(
+                            position => {
+                                userPosition = { 
+                                    lat: position.coords.latitude, 
+                                    lon: position.coords.longitude 
+                                };
+                                resolve(userPosition);
+                            },
+                            error => {
+                                console.error("Erreur de géolocalisation:", error);
+                                alert("Impossible d'obtenir votre position. La fonctionnalité de distance est désactivée.");
+                                useLocationCheckbox.checked = false;
+                                distanceFilter.style.display = 'none';
+                                sortSelect.querySelector('option[value="distance"]').disabled = true;
+                                reject(error);
+                            }
+                        );
+                    });
+                } else {
+                    alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
+                    useLocationCheckbox.checked = false;
+                    return Promise.reject("Géolocalisation non supportée");
+                }
+            }               
+
+            function loadFountainTypes() {
+                fetch('search.php?action=getTypes')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            fountainTypesContainer.innerHTML = data.data.map(type => `
+                                <div class="checkbox-item">
+                                    <input type="checkbox" name="types[]" value="${type}" id="type-${type.toLowerCase().replace(/[^a-z0-9]/g, '-')}">
+                                    <label for="type-${type.toLowerCase().replace(/[^a-z0-9]/g, '-')}">${type}</label>
+                                </div>
+                            `).join('');
+                        }
+                    })
+                    .catch(error => console.error('Erreur lors du chargement des types:', error));
+            }
+
+            function loadDistricts() {
+                fetch('search.php?action=getDistricts')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            districtSelect.innerHTML = '<option value="">Tous les arrondissements</option>' + data.data.map(district => `<option value="${district}">${district}</option>`).join('');
+                        }
+                    })
+                    .catch(error => console.error('Erreur lors du chargement des arrondissements:', error));
+            }
+
+            function loadModels() {
+                fetch('search.php?action=getModels')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            modelSelect.innerHTML = '<option value="">Tous les modèles</option>' + data.data.map(model => `<option value="${model}">${model}</option>`).join('');
+                        }
+                    })
+                    .catch(error => console.error('Erreur lors du chargement des modèles:', error));
+            }
+
+            async function searchFountains() {
+                try {
+                    const formData = new FormData(searchForm);
+                    let searchParams = new URLSearchParams({
+                        action: 'getFountains',
+                        search: formData.get('search') || '',
+                        district: formData.get('district') || '',
+                        available: formData.get('available') || '',
+                        model: formData.get('model') || '',
+                        sort: formData.get('sort') || 'type'
+                    });
+                    
+                    // Récupérer les types de fontaines sélectionnés
+                    const selectedTypes = Array.from(document.querySelectorAll('#fountain-types input[type="checkbox"]:checked'))
+                        .map(checkbox => checkbox.value);
+                    if (selectedTypes.length > 0) {
+                        searchParams.append('types', selectedTypes.join(','));
+                    }
+                    
+                    // Si l'utilisateur a activé la géolocalisation, attendre d'avoir la position
+                    if (useLocationCheckbox.checked) {
+                        resultsList.innerHTML = '<div class="loading-results"><div class="spinner"></div><p>Récupération de votre position...</p></div>';
+                        
+                        try {
+                            // S'assurer que nous avons la position avant de continuer
+                            if (!userPosition) {
+                                await getLocation();
+                            }
+                            
+                            if (userPosition) {
+                                searchParams.append('userLat', userPosition.lat);
+                                searchParams.append('userLon', userPosition.lon);
+                                searchParams.append('maxDistance', distanceSlider.value);
+                            }
+                        } catch (err) {
+                            console.error("Erreur lors de la géolocalisation:", err);
+                        }
+                    }
+                    
+                    resultsList.innerHTML = '<div class="loading-results"><div class="spinner"></div><p>Recherche en cours...</p></div>';
+                    
+                    const response = await fetch(`search.php?${searchParams.toString()}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        displayResults(data.data);
+                    } else {
+                        resultsList.innerHTML = `<p class="error-message">Une erreur est survenue lors de la recherche: ${data.message || 'Erreur inconnue'}</p>`;
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la recherche:', error);
+                    resultsList.innerHTML = '<p class="error-message">Une erreur est survenue lors de la recherche.</p>';
+                }
+            }
+
+            function displayResults(fountains) {
+                resultsList.innerHTML = '';
+                resultsCount.textContent = `(${fountains.length})`;
+
+                if (fountains.length === 0) {
+                    resultsList.innerHTML = '<p class="no-results">Aucune fontaine trouvée correspondant à vos critères.</p>';
+                    return;
+                }
+
+                fountains.forEach(fountain => {
+                    let lat = null, lon = null;
+                    
+                    try {
+                        // Extraire les coordonnées selon le format disponible
+                        if (fountain.geo_point_2d) {
+                            if (typeof fountain.geo_point_2d === 'string') {
+                                const coords = JSON.parse(fountain.geo_point_2d);
+                                lat = coords.lat;
+                                lon = coords.lon;
+                            } else {
+                                lat = fountain.geo_point_2d.lat;
+                                lon = fountain.geo_point_2d.lon;
+                            }
+                        } else if (fountain.geo_shape) {
+                            let geoShape;
+                            if (typeof fountain.geo_shape === 'string') {
+                                geoShape = JSON.parse(fountain.geo_shape);
+                            } else {
+                                geoShape = fountain.geo_shape;
+                            }
+                            
+                            if (geoShape && geoShape.geometry && 
+                                geoShape.geometry.coordinates && 
+                                geoShape.geometry.type === "Point") {
+                                lon = geoShape.geometry.coordinates[0];
+                                lat = geoShape.geometry.coordinates[1];
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Coordonnées non disponibles pour cette fontaine:', e);
+                    }
+
+                    // Standardiser la valeur de disponibilité (en tenant compte des variations possibles)
+                    const isAvailable = fountain.dispo && 
+                                    (fountain.dispo.toString().trim().toUpperCase() === 'OUI' || 
+                                    fountain.dispo === '1' || 
+                                    fountain.dispo === true);
+
+                    const card = document.createElement('div');
+                    card.className = 'fountain-card';
+                    card.innerHTML = `
+                        <div class="fountain-info">
+                            <div class="fountain-header">
+                                <h4 class="fountain-name">${fountain.type_objet || 'Fontaine'}</h4>
+                                <span class="available-tag ${isAvailable ? 'available-yes' : 'available-no'}">
+                                    ${isAvailable ? 'Disponible' : 'Non disponible'}
+                                </span>
+                            </div>
+                            <p class="fountain-address">${getAddress(fountain)}</p>
+                            <p class="fountain-details">
+                                ${fountain.modele ? `<span class="detail-item">Modèle: ${fountain.modele}</span>` : ''}
+                                ${fountain.commune ? `<span class="detail-item">${fountain.commune}</span>` : ''}
+                            </p>
+                            ${fountain.distance !== null && fountain.distance !== undefined ? 
+                            `<p class="fountain-distance">Distance: ${formatDistance(fountain.distance)}</p>` : ''}
+                        </div>
+                        <div class="fountain-actions">
+                            ${(lat && lon) ? `
+                                <button class="view-on-map-button" onclick="centerMapOn(${lat}, ${lon})">
+                                    <i class="fas fa-map-marker-alt"></i> Voir sur la carte
+                                </button>
+                                <button class="route-button" onclick="calculateRoute(${lat}, ${lon})">
+                                    <i class="fas fa-route"></i> Itinéraire
+                                </button>
+                            ` : '<p class="no-coords">Coordonnées non disponibles</p>'}
+                        </div>
+                    `;
+                    resultsList.appendChild(card);
+                });
+            }
+
+            function getAddress(fountain) {
+                let address = '';
+                if (fountain.no_voirie_pair) address += fountain.no_voirie_pair + ' ';
+                else if (fountain.no_voirie_impair) address += fountain.no_voirie_impair + ' ';
+                if (fountain.voie) address += fountain.voie;
+                return address || 'Adresse non disponible';
+            }
+
+            function formatDistance(distance) {
+                return distance < 1000 ? Math.round(distance) + ' m' : (distance / 1000).toFixed(1) + ' km';
+            }
+
+            setTimeout(() => {
+                searchFountains();
+            }, 500);
+        });
+
+        function centerMapOn(lat, lon) {
+            map.setView([lat, lon], 17);
+            searchContainer.classList.remove('active');
+        }
+
+        
+
+        document.addEventListener('click', function(event) {
+            if (!searchContainer.contains(event.target) && event.target !== searchToggleButton && !searchToggleButton.contains(event.target)) {
+                searchContainer.classList.remove('active');
             }
         });
 
-        distanceSlider.addEventListener('input', function() {
-            distanceValue.textContent = this.value + ' m';
+        function centerMapOn(lat, lon) {
+            map.setView([lat, lon], 17);
+            searchContainer.classList.remove('active');
+        }
+
+        const closeSearchButton = document.querySelector('.close-search-button');
+
+        searchContainer.classList.remove('active');
+
+        searchContainer.addEventListener('click', function(event) {
+            event.stopPropagation();
         });
 
-        searchForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            searchFountains();
-        });
-
-        searchForm.addEventListener('reset', function() {
-            setTimeout(() => {
-                resultsList.innerHTML = '';
-                resultsCount.textContent = '(0)';
-                useLocationCheckbox.checked = false;
-                distanceFilter.style.display = 'none';
-                sortSelect.querySelector('option[value="distance"]').disabled = true;
-                document.querySelectorAll('#fountain-types input[type="checkbox"]').forEach(checkbox => checkbox.checked = false);
-            }, 10);
+        document.addEventListener('click', function(event) {
+            if (!searchContainer.contains(event.target) && 
+                event.target !== searchToggleButton &&
+                !searchToggleButton.contains(event.target)) {
+                searchContainer.classList.remove('active');
+            }
         });
 
         searchToggleButton.addEventListener('click', function() {
             searchContainer.classList.toggle('active');
-            if (searchContainer.classList.contains('active') && resultsList.children.length === 0) {
-                searchFountains();
-            }
         });
 
         closeSearchButton.addEventListener('click', function() {
             searchContainer.classList.remove('active');
         });
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(
-                    position => {
-                        userPosition = { lat: position.coords.latitude, lon: position.coords.longitude };
-                    },
-                    error => {
-                        console.error("Erreur de géolocalisation:", error);
-                        alert("Impossible d'obtenir votre position. La fonctionnalité de distance est désactivée.");
-                        useLocationCheckbox.checked = false;
-                        distanceFilter.style.display = 'none';
-                        sortSelect.querySelector('option[value="distance"]').disabled = true;
-                    }
-                );
-            } else {
-                alert("La géolocalisation n'est pas prise en charge par votre navigateur.");
-                useLocationCheckbox.checked = false;
-            }
-        }
-
-        function loadFountainTypes() {
-            fetch('search.php?action=getTypes')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        fountainTypesContainer.innerHTML = data.data.map(type => `
-                            <div class="checkbox-item">
-                                <input type="checkbox" name="types[]" value="${type}" id="type-${type.toLowerCase().replace(/[^a-z0-9]/g, '-')}">
-                                <label for="type-${type.toLowerCase().replace(/[^a-z0-9]/g, '-')}">${type}</label>
-                            </div>
-                        `).join('');
-                    }
-                })
-                .catch(error => console.error('Erreur lors du chargement des types:', error));
-        }
-
-        function loadDistricts() {
-            fetch('search.php?action=getDistricts')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        districtSelect.innerHTML = '<option value="">Tous les arrondissements</option>' + data.data.map(district => `<option value="${district}">${district}</option>`).join('');
-                    }
-                })
-                .catch(error => console.error('Erreur lors du chargement des arrondissements:', error));
-        }
-
-        function loadModels() {
-            fetch('search.php?action=getModels')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        modelSelect.innerHTML = '<option value="">Tous les modèles</option>' + data.data.map(model => `<option value="${model}">${model}</option>`).join('');
-                    }
-                })
-                .catch(error => console.error('Erreur lors du chargement des modèles:', error));
-        }
-
-        function searchFountains() {
-            const formData = new FormData(searchForm);
-            const searchParams = new URLSearchParams({
-                action: 'getFountains',
-                search: formData.get('search') || '',
-                district: formData.get('district') || '',
-                available: formData.get('available') || '',
-                model: formData.get('model') || '',
-                sort: formData.get('sort') || 'type',
-                types: Array.from(document.querySelectorAll('#fountain-types input[type="checkbox"]:checked')).map(checkbox => checkbox.value).join(','),
-                ...(useLocationCheckbox.checked && userPosition ? { userLat: userPosition.lat, userLon: userPosition.lon, maxDistance: distanceSlider.value } : {})
-            });
-
-            resultsList.innerHTML = '<div class="loading-results"><div class="spinner"></div><p>Recherche en cours...</p></div>';
-
-            fetch(`search.php?${searchParams.toString()}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        displayResults(data.data);
-                    } else {
-                        resultsList.innerHTML = '<p class="error-message">Une erreur est survenue lors de la recherche.</p>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la recherche:', error);
-                    resultsList.innerHTML = '<p class="error-message">Une erreur est survenue lors de la recherche.</p>';
-                });
-        }
-
-        function displayResults(fountains) {
-            resultsList.innerHTML = '';
-            resultsCount.textContent = `(${fountains.length})`;
-
-            if (fountains.length === 0) {
-                resultsList.innerHTML = '<p class="no-results">Aucune fontaine trouvée correspondant à vos critères.</p>';
-                return;
-            }
-
-            fountains.forEach(fountain => {
-                let lat = null, lon = null;
-                try {
-                    if (fountain.geo_point_2d) {
-                        lat = fountain.geo_point_2d.lat;
-                        lon = fountain.geo_point_2d.lon;
-                    } else if (fountain.geo_shape) {
-                        const coords = JSON.parse(fountain.geo_shape).geometry.coordinates;
-                        lon = coords[0];
-                        lat = coords[1];
-                    }
-                } catch (e) {
-                    console.warn('Coordonnées non disponibles pour cette fontaine');
-                }
-
-                const card = document.createElement('div');
-                card.className = 'fountain-card';
-                card.innerHTML = `
-                    <div class="fountain-info">
-                        <div class="fountain-header">
-                            <h4 class="fountain-name">${fountain.type_objet || 'Fontaine'}</h4>
-                            <span class="available-tag ${fountain.dispo === 'OUI' ? 'available-yes' : 'available-no'}">
-                                ${fountain.dispo === 'OUI' ? 'Disponible' : 'Non disponible'}
-                            </span>
-                        </div>
-                        <p class="fountain-address">${getAddress(fountain)}</p>
-                        <p class="fountain-details">
-                            ${fountain.modele ? `<span class="detail-item">Modèle: ${fountain.modele}</span>` : ''}
-                            ${fountain.commune ? `<span class="detail-item">${fountain.commune}</span>` : ''}
-                        </p>
-                        ${fountain.distance !== null && fountain.distance !== undefined ? `<p class="fountain-distance">Distance: ${formatDistance(fountain.distance)}</p>` : ''}
-                    </div>
-                    <div class="fountain-actions">
-                        ${lat && lon ? `
-                            <button class="view-on-map-button" onclick="centerMapOn(${lat}, ${lon})">
-                                <i class="fas fa-map-marker-alt"></i> Voir sur la carte
-                            </button>
-                            <button class="route-button" onclick="calculateRoute(${lat}, ${lon})">
-                                <i class="fas fa-route"></i> Itinéraire
-                            </button>
-                        ` : ''}
-                    </div>
-                `;
-                resultsList.appendChild(card);
-            });
-        }
-
-        function getAddress(fountain) {
-            let address = '';
-            if (fountain.no_voirie_pair) address += fountain.no_voirie_pair + ' ';
-            else if (fountain.no_voirie_impair) address += fountain.no_voirie_impair + ' ';
-            if (fountain.voie) address += fountain.voie;
-            return address || 'Adresse non disponible';
-        }
-
-        function formatDistance(distance) {
-            return distance < 1000 ? Math.round(distance) + ' m' : (distance / 1000).toFixed(1) + ' km';
-        }
-
-        setTimeout(() => {
-            searchFountains();
-        }, 500);
-    });
-
-    function centerMapOn(lat, lon) {
-        map.setView([lat, lon], 17);
-        searchContainer.classList.remove('active');
-    }
-
-    const searchToggleButton = document.getElementById('search-toggle-button');
-    const searchContainer = document.querySelector('.search-container');
-
-    searchContainer.classList.remove('active');
-
-    searchContainer.addEventListener('click', function(event) {
-        event.stopPropagation();
-    });
-
-    document.addEventListener('click', function(event) {
-        if (!searchContainer.contains(event.target) && event.target !== searchToggleButton && !searchToggleButton.contains(event.target)) {
-            searchContainer.classList.remove('active');
-        }
-    });
 </script>
 
 </body>
