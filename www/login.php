@@ -52,7 +52,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="CSS/home.css" />
 </head>
 <body>
-    <!-- Header -->
     <header class="site-header">
         <div class="header-container">
             <div class="logo-container">

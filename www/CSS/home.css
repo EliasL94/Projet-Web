@@ -125,7 +125,6 @@ h1 {
     width: 100%;
 }
 
-/* Formulaire de recherche */
 .search-form {
     background-color: #f8f9fa;
     border-radius: 10px;
@@ -245,7 +244,6 @@ h1 {
     }
 }
 
-/* Styles du header */
 .site-header {
     background-color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -329,7 +327,6 @@ h1 {
     box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
 }
 
-/* Style pour le profil utilisateur */
 .user-profile {
     position: relative;
     cursor: pointer;
@@ -413,7 +410,6 @@ h1 {
     color: #3498db;
 }
 
-/* Ajustements pour le container principal */
 .container {
     display: flex;
     flex-direction: column;
@@ -424,7 +420,6 @@ h1 {
     background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
 }
 
-/* Styles pour les formulaires d'authentification */
 .auth-container {
     display: flex;
     flex-direction: column;
@@ -557,7 +552,6 @@ h1 {
     text-decoration: underline;
 }
 
-/* Messages d'erreur et de succès */
 .alert {
     padding: 12px 15px;
     border-radius: 8px;
@@ -601,7 +595,6 @@ h1 {
     color: #10b981;
 }
 
-/* Styles pour la page de profil */
 .profile-container {
     padding: 90px 20px 20px;
     max-width: 800px;
@@ -683,7 +676,6 @@ h1 {
     border-bottom: 1px solid #ecf0f1;
 }
 
-/* Responsive styles */
 @media (max-width: 768px) {
     .auth-card, .profile-form {
         padding: 20px;
@@ -703,7 +695,6 @@ h1 {
     }
 }
 
-/* Style pour la page de profil */
 .profile-container {
     max-width: 800px;
     margin: 40px auto;
@@ -908,7 +899,6 @@ h1 {
     color: #155724;
 }
 
-/* Style pour le menu dropdown dans le header */
 .user-profile {
     position: relative;
     cursor: pointer;
@@ -974,7 +964,6 @@ h1 {
     color: #0077b6;
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
     .profile-container {
         padding: 15px;
@@ -986,7 +975,6 @@ h1 {
     }
 }
 
-/* Back button */
 .back-to-home {
     color: #3498db;
     font-size: 20px;

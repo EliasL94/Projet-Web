@@ -1,5 +1,7 @@
 <?php 
     include('data/db.php');
+
+    session_start();
     
     $userLat = isset($_GET['lat']) ? floatval($_GET['lat']) : null;
     $userLon = isset($_GET['lon']) ? floatval($_GET['lon']) : null;
@@ -26,12 +28,46 @@
     
 </head>
 <body>
-    <div class="header">
-        <h1>Fontaines à boire de Paris</h1>
-        <a href="home.php" class="back-to-home">
-            <i class="fas fa-home"></i>
-        </a>
-    </div>
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="index.php" class="logo-link">
+                    <i class="fas fa-tint"></i>
+                    <span>Fontaines Paris</span>
+                </a>
+            </div>
+            
+            <div class="auth-buttons">
+                <a href="home.php" class="back-to-home" title="Accueil">
+                    <i class="fas fa-home"></i>
+                </a>
+
+                <?php if(isset($_SESSION['user_id'])): ?>
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <span>Bonjour, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <?php if(isset($_SESSION['profile_image']) && !empty($_SESSION['profile_image'])): ?>
+                                <img src="uploads/profiles/<?php echo htmlspecialchars($_SESSION['profile_image']); ?>" alt="Photo de profil" class="profile-image">
+                            <?php else: ?>
+                                <div class="profile-image-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="profile.php" class="dropdown-item"><i class="fas fa-user-edit"></i> Mon Profil</a>
+                            <a href="logout.php" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <a href="login.php" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> Se connecter</a>
+                    <a href="signup.php" class="btn btn-primary"><i class="fas fa-user-plus"></i> S'inscrire</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </header>
+
+
     
     <div id="map"></div>
     
@@ -51,12 +87,14 @@
         </div>
     </div>
     
-    <button id="location-button" class="location-button" title="Trouver ma position">
-        <i class="fas fa-location-arrow"></i>
-    </button>
-    <button id="search-toggle-button" class="search-toggle-button" title="Rechercher des fontaines">
-        <i class="fas fa-search"></i>
-    </button>
+    <div class="button-group" >
+        <button id="location-button" class="location-button" title="Trouver ma position">
+            <i class="fas fa-location-arrow"></i>
+        </button>
+        <button id="search-toggle-button" class="search-toggle-button" title="Rechercher des fontaines">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
     
     
     
@@ -81,7 +119,6 @@
             <div class="form-group">
                 <label>Type de fontaine</label>
                 <div class="checkbox-group scrollable" id="fountain-types">
-                    <!-- Sera rempli dynamiquement -->
                 </div>
             </div>
             
@@ -89,7 +126,6 @@
                 <label for="district-select">Arrondissement</label>
                 <select id="district-select" name="district">
                     <option value="">Tous les arrondissements</option>
-                    <!-- Sera rempli dynamiquement -->
                 </select>
             </div>
             
@@ -97,7 +133,6 @@
                 <label for="model-select">Modèle de fontaine</label>
                 <select id="model-select" name="model">
                     <option value="">Tous les modèles</option>
-                    <!-- Sera rempli dynamiquement -->
                 </select>
             </div>
             
@@ -278,8 +313,8 @@
                     if (fountain.modele) popupContent += `Modèle: ${fountain.modele}<br>`;
                     
                     let adresse = "";
-                    if (fountain.no_voirie_pair) adresse += fountain.no_voirie_pair + " ";
-                    else if (fountain.no_voirie_impair) adresse += fountain.no_voirie_impair + " ";
+                    if (fountain.voie_paire) adresse += fountain.voie_paire + " ";
+                    else if (fountain.voie_impaire) adresse += fountain.voie_impaire + " ";
                     if (fountain.voie) adresse += fountain.voie;
                     if (adresse) popupContent += `Adresse: ${adresse}<br>`;
                     
@@ -699,42 +734,55 @@
 
                 fountains.forEach(fountain => {
                     let lat = null, lon = null;
-                    
+
                     try {
-                        // Extraire les coordonnées selon le format disponible
+                        // Gestion de geo_point_2d
                         if (fountain.geo_point_2d) {
                             if (typeof fountain.geo_point_2d === 'string') {
-                                const coords = JSON.parse(fountain.geo_point_2d);
-                                lat = coords.lat;
-                                lon = coords.lon;
+                                // Est-ce que c'est un JSON ou un simple CSV ?
+                                if (fountain.geo_point_2d.includes('{')) {
+                                    // Format JSON
+                                    const coords = JSON.parse(fountain.geo_point_2d);
+                                    lat = coords.lat;
+                                    lon = coords.lon;
+                                } else {
+                                    // Format CSV: "lat, lon"
+                                    const parts = fountain.geo_point_2d.split(',').map(part => parseFloat(part.trim()));
+                                    if (parts.length === 2) {
+                                        lat = parts[0];
+                                        lon = parts[1];
+                                    }
+                                }
                             } else {
+                                // Objet natif JS
                                 lat = fountain.geo_point_2d.lat;
                                 lon = fountain.geo_point_2d.lon;
                             }
-                        } else if (fountain.geo_shape) {
+                        }
+
+                        // Sinon, on tente geo_shape
+                        if ((!lat || !lon) && fountain.geo_shape) {
                             let geoShape;
                             if (typeof fountain.geo_shape === 'string') {
                                 geoShape = JSON.parse(fountain.geo_shape);
                             } else {
                                 geoShape = fountain.geo_shape;
                             }
-                            
-                            if (geoShape && geoShape.geometry && 
-                                geoShape.geometry.coordinates && 
-                                geoShape.geometry.type === "Point") {
-                                lon = geoShape.geometry.coordinates[0];
-                                lat = geoShape.geometry.coordinates[1];
+
+                            if (geoShape && geoShape.geometry && geoShape.geometry.type === 'Point') {
+                                const coords = geoShape.geometry.coordinates;
+                                lon = coords[0];
+                                lat = coords[1];
                             }
                         }
                     } catch (e) {
-                        console.warn('Coordonnées non disponibles pour cette fontaine:', e);
+                        console.warn('Coordonnées non disponibles pour cette fontaine:', fountain.geo_point_2d, e);
                     }
 
-                    // Standardiser la valeur de disponibilité (en tenant compte des variations possibles)
-                    const isAvailable = fountain.dispo && 
-                                    (fountain.dispo.toString().trim().toUpperCase() === 'OUI' || 
-                                    fountain.dispo === '1' || 
-                                    fountain.dispo === true);
+                    const isAvailable = fountain.disponibilité &&
+                        (fountain.disponibilité.toString().trim().toUpperCase() === 'OUI' ||
+                        fountain.disponibilité === '1' ||
+                        fountain.disponibilité === true);
 
                     const card = document.createElement('div');
                     card.className = 'fountain-card';
@@ -752,7 +800,7 @@
                                 ${fountain.commune ? `<span class="detail-item">${fountain.commune}</span>` : ''}
                             </p>
                             ${fountain.distance !== null && fountain.distance !== undefined ? 
-                            `<p class="fountain-distance">Distance: ${formatDistance(fountain.distance)}</p>` : ''}
+                                `<p class="fountain-distance">Distance: ${formatDistance(fountain.distance)}</p>` : ''}
                         </div>
                         <div class="fountain-actions">
                             ${(lat && lon) ? `
@@ -769,10 +817,11 @@
                 });
             }
 
+
             function getAddress(fountain) {
                 let address = '';
-                if (fountain.no_voirie_pair) address += fountain.no_voirie_pair + ' ';
-                else if (fountain.no_voirie_impair) address += fountain.no_voirie_impair + ' ';
+                if (fountain.voie_paire) address += fountain.voie_paire + ' ';
+                else if (fountain.voie_impaire) address += fountain.voie_impaire + ' ';
                 if (fountain.voie) address += fountain.voie;
                 return address || 'Adresse non disponible';
             }
