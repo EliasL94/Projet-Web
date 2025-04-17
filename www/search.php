@@ -12,7 +12,7 @@ function getFountains($filters = []) {
     
     if (!empty($filters['search'])) {
         $search = '%' . $filters['search'] . '%';
-        $conditions[] = "(voie LIKE ? OR commune LIKE ? OR type_objet LIKE ? OR modele LIKE ? OR no_voirie_pair LIKE ? OR no_voirie_impair LIKE ?)";
+        $conditions[] = "(voie LIKE ? OR commune LIKE ? OR type_objet LIKE ? OR modele LIKE ? OR voie_paire LIKE ? OR voie_impaire LIKE ?)";
         $params[] = $search;
         $params[] = $search;
         $params[] = $search;
@@ -35,7 +35,7 @@ function getFountains($filters = []) {
     }
     
     if (isset($filters['available']) && $filters['available'] !== '') {
-        $conditions[] = "dispo = ?";
+        $conditions[] = "disponibilité = ?";
         $params[] = $filters['available'] === '1' ? 'OUI' : 'NON';
     }
     
@@ -56,7 +56,7 @@ function getFountains($filters = []) {
             $sql .= " ORDER BY modele ASC, type_objet ASC";
             break;
         case 'availability':
-            $sql .= " ORDER BY dispo DESC, type_objet ASC";
+            $sql .= " ORDER BY disponibilité DESC, type_objet ASC";
             break;
         default:
             $sql .= " ORDER BY type_objet ASC, voie ASC";
@@ -132,7 +132,7 @@ function calculateDistance($lat1, $lon1, $lat2, $lon2) {
     $a = sin($dLat/2) * sin($dLat/2) + cos($lat1Rad) * cos($lat2Rad) * sin($dLon/2) * sin($dLon/2);
     $c = 2 * atan2(sqrt($a), sqrt(1-$a));
     
-    return $earthRadius * $c; // distance en mètres
+    return $earthRadius * $c;
 }
 
 if (isset($_GET['action'])) {

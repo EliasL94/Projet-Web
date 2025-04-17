@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Redirection si l'utilisateur est déjà connecté
 if(isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
@@ -96,7 +95,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="CSS/home.css" />
 </head>
 <body>
-    <!-- Header -->
     <header class="site-header">
         <div class="header-container">
             <div class="logo-container">
@@ -186,29 +184,22 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             const confirmPasswordInput = document.getElementById('confirm_password');
             const passwordStrength = document.getElementById('password-strength');
             
-            // Afficher la force du mot de passe
             passwordInput.addEventListener('input', function() {
                 const password = this.value;
                 let strength = 0;
                 let message = '';
                 
                 if(password.length > 0) {
-                    // Longueur minimale
                     if(password.length >= 8) strength += 1;
                     
-                    // Présence de lettres majuscules
                     if(/[A-Z]/.test(password)) strength += 1;
                     
-                    // Présence de lettres minuscules
                     if(/[a-z]/.test(password)) strength += 1;
                     
-                    // Présence de chiffres
                     if(/[0-9]/.test(password)) strength += 1;
                     
-                    // Présence de caractères spéciaux
                     if(/[^A-Za-z0-9]/.test(password)) strength += 1;
                     
-                    // Message selon la force
                     if(strength <= 2) {
                         message = '<span class="strength-weak"><i class="fas fa-exclamation-circle"></i> Mot de passe faible</span>';
                     } else if(strength <= 4) {
@@ -221,7 +212,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 passwordStrength.innerHTML = message;
             });
             
-            // Validation du formulaire
             form.addEventListener('submit', function(e) {
                 const username = document.getElementById('username').value.trim();
                 const email = document.getElementById('email').value.trim();
@@ -231,7 +221,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 let isValid = true;
                 let errorMessages = [];
                 
-                // Validation du nom d'utilisateur
                 if(username === '') {
                     errorMessages.push("Le nom d'utilisateur est requis");
                     isValid = false;
@@ -240,7 +229,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                     isValid = false;
                 }
                 
-                // Validation de l'email
                 if(email === '') {
                     errorMessages.push("L'adresse email est requise");
                     isValid = false;
@@ -249,7 +237,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                     isValid = false;
                 }
                 
-                // Validation du mot de passe
                 if(password === '') {
                     errorMessages.push("Le mot de passe est requis");
                     isValid = false;
@@ -276,7 +263,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 }
                 
-                // Vérification de la correspondance des mots de passe
                 if(password !== confirmPassword) {
                     errorMessages.push("Les mots de passe ne correspondent pas");
                     isValid = false;
@@ -285,16 +271,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if(!isValid) {
                     e.preventDefault();
                     
-                    // Afficher les erreurs
                     const alertDiv = document.createElement('div');
                     alertDiv.className = 'alert alert-danger';
                     alertDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i><div>${errorMessages.map(msg => `<p>${msg}</p>`).join('')}</div>`;
                     
-                    // Supprimer les anciennes alertes
                     const oldAlerts = document.querySelectorAll('.alert');
                     oldAlerts.forEach(alert => alert.remove());
                     
-                    // Insérer la nouvelle alerte au début du formulaire
                     form.insertBefore(alertDiv, form.firstChild);
                 }
             });

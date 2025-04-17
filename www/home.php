@@ -1,7 +1,6 @@
 <?php 
     include('data/db.php');
     
-    // Démarrer la session pour gérer la connexion de l'utilisateur
     session_start();
     
     $userLat = isset($_GET['lat']) ? floatval($_GET['lat']) : null;
@@ -25,7 +24,6 @@
     <link rel="stylesheet" href="CSS/home.css" />
 </head>
 <body>
-    <!-- Nouveau header -->
     <header class="site-header">
         <div class="header-container">
             <div class="logo-container">
@@ -73,9 +71,9 @@
                 <button id="locate-button" class="btn primary">
                     <i class="fas fa-location-arrow"></i> Me localiser
                 </button>
-                <button id="search-button" class="btn secondary">
+                <a href="index.php" class="btn secondary" id="search-button">
                     <i class="fas fa-search"></i> Rechercher
-                </button>
+                </a>
             </div>
             
             <div id="search-form" class="search-form">
@@ -90,7 +88,6 @@
                         <label for="district-select">Arrondissement</label>
                         <select id="district-select" name="district">
                             <option value="">Tous les arrondissements</option>
-                            <!-- Options chargées dynamiquement -->
                         </select>
                     </div>
                     
@@ -98,7 +95,6 @@
                         <label for="type-select">Type de fontaine</label>
                         <select id="type-select" name="type">
                             <option value="">Tous les types</option>
-                            <!-- Options chargées dynamiquement -->
                         </select>
                     </div>
                     
