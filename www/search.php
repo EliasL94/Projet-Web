@@ -158,7 +158,6 @@ if (isset($_GET['action'])) {
                     foreach ($fountains as &$fountain) {
                         $fountainCoords = null;
                         
-                        // Traitement des coordonnées depuis geo_point_2d
                         if (isset($fountain['geo_point_2d'])) {
                             if (is_string($fountain['geo_point_2d'])) {
                                 try {
@@ -170,7 +169,6 @@ if (isset($_GET['action'])) {
                                 $fountainCoords = $fountain['geo_point_2d'];
                             }
                         }
-                        // Traitement des coordonnées depuis geo_shape
                         elseif (isset($fountain['geo_shape'])) {
                             try {
                                 if (is_string($fountain['geo_shape'])) {

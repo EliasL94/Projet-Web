@@ -2,7 +2,7 @@
 session_start();
 
 if(isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: map.php");
     exit();
 }
 
@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['email'] = $user['email'];
             $_SESSION['profile_image'] = $user['profile_image'];
             
-            header("Location: index.php");
+            header("Location: map.php");
             exit();
         } else {
             $errors[] = "Identifiants incorrects";
@@ -55,14 +55,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header class="site-header">
         <div class="header-container">
             <div class="logo-container">
-                <a href="index.php" class="logo-link">
+                <a href="map.php" class="logo-link">
                     <i class="fas fa-tint"></i>
                     <span>Fontaines Paris</span>
                 </a>
             </div>
             
             <div class="auth-buttons">
-                <a href="home.php" class="back-to-home">
+                <a href="index.php" class="back-to-home">
                     <i class="fas fa-home"></i>
                 </a>
                 <a href="login.php" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> Se connecter</a>

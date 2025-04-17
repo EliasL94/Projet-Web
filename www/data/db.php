@@ -1,9 +1,9 @@
 <?php
 $dbConfig = [
-    'host' => 'localhost',
-    'dbname' => 'fontaines',
-    'user' => 'root',
-    'password' => 'root',
+    'host' => 'mysql-elias.alwaysdata.net',
+    'dbname' => 'elias_fontaines',
+    'user' => 'elias',
+    'password' => 'Elias.94(!)%',
 ];
 
 try {
