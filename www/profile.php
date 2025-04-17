@@ -21,34 +21,27 @@ if(!$user) {
     exit();
 }
 
-// Traitement du formulaire de mise à jour des informations
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        // Suppression du compte utilisateur
         if (isset($_POST['delete_account'])) {
-            // Supprimer la photo de profil si elle existe
             if (!empty($user['profile_image']) && file_exists('uploads/profiles/' . $user['profile_image'])) {
                 unlink('uploads/profiles/' . $user['profile_image']);
             }
     
-            // Supprimer l'utilisateur de la base de données
             $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
             if ($stmt->execute([$_SESSION['user_id']])) {
                 session_destroy();
-                header("Location: home.php");
+                header("Location: index.php");
                 exit();
             } else {
                 $errors[] = "Une erreur est survenue lors de la suppression du compte.";
             }
         }
     
-    // Vérifier quelle action est demandée
     if(isset($_POST['update_info'])) {
-        // Mise à jour des informations du profil
         $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
         
-        // Validation des champs
         if(empty($username)) {
             $errors[] = "Le nom d'utilisateur est requis";
         } elseif(strlen($username) < 3 || strlen($username) > 20) {
@@ -61,14 +54,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = "L'adresse email est invalide";
         }
         
-        // Vérifier si le nom d'utilisateur ou l'email existe déjà (sauf pour l'utilisateur actuel)
         if(empty($errors)) {
             $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE (email = ? OR username = ?) AND id != ?");
             $stmt->execute([$email, $username, $_SESSION['user_id']]);
             $count = $stmt->fetchColumn();
             
             if($count > 0) {
-                // Vérifier lequel existe déjà
                 $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = ? AND id != ?");
                 $stmt->execute([$email, $_SESSION['user_id']]);
                 $emailExists = $stmt->fetchColumn() > 0;
@@ -87,7 +78,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        // Si pas d'erreurs, mettre à jour les informations
         if(empty($errors)) {
             $stmt = $pdo->prepare("UPDATE users SET username = ?, email = ? WHERE id = ?");
             if($stmt->execute([$username, $email, $_SESSION['user_id']])) {
@@ -101,16 +91,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } elseif(isset($_POST['update_password'])) {
-        // Mise à jour du mot de passe
         $current_password = $_POST['current_password'];
         $new_password = $_POST['new_password'];
         $confirm_password = $_POST['confirm_password'];
         
-        // Validation des champs
         if(empty($current_password)) {
             $errors[] = "Le mot de passe actuel est requis";
         } else {
-            // Vérifier que le mot de passe actuel est correct
             if(!password_verify($current_password, $user['password'])) {
                 $errors[] = "Le mot de passe actuel est incorrect";
             }
@@ -134,7 +121,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = "Les nouveaux mots de passe ne correspondent pas";
         }
         
-        // Si pas d'erreurs, mettre à jour le mot de passe
         if(empty($errors)) {
             $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
             
@@ -146,42 +132,34 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } elseif(isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
-        // Mise à jour de la photo de profil
         $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
-        $max_size = 2 * 1024 * 1024; // 2MB
+        $max_size = 2 * 1024 * 1024;
         
         $file_info = $_FILES['profile_image'];
         
-        // Vérifier le type de fichier
         if(!in_array($file_info['type'], $allowed_types)) {
             $errors[] = "Le type de fichier n'est pas autorisé. Veuillez télécharger une image (JPEG, PNG ou GIF)";
         }
         
-        // Vérifier la taille du fichier
         if($file_info['size'] > $max_size) {
             $errors[] = "La taille du fichier est trop importante. La taille maximale est de 2MB";
         }
         
         if(empty($errors)) {
-            // Créer le dossier s'il n'existe pas
             $upload_dir = 'uploads/profiles/';
             if(!is_dir($upload_dir)) {
                 mkdir($upload_dir, 0755, true);
             }
             
-            // Générer un nom de fichier unique
             $file_extension = pathinfo($file_info['name'], PATHINFO_EXTENSION);
             $filename = uniqid() . '_' . $_SESSION['user_id'] . '.' . $file_extension;
             $target_path = $upload_dir . $filename;
             
-            // Déplacer le fichier vers le dossier des téléchargements
             if(move_uploaded_file($file_info['tmp_name'], $target_path)) {
-                // Supprimer l'ancienne image si elle existe
                 if(!empty($user['profile_image']) && file_exists($upload_dir . $user['profile_image'])) {
                     unlink($upload_dir . $user['profile_image']);
                 }
                 
-                // Mettre à jour la base de données
                 $stmt = $pdo->prepare("UPDATE users SET profile_image = ? WHERE id = ?");
                 if($stmt->execute([$filename, $_SESSION['user_id']])) {
                     $_SESSION['profile_image'] = $filename;
@@ -211,14 +189,14 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     <header class="site-header">
         <div class="header-container">
             <div class="logo-container">
-                <a href="index.php" class="logo-link">
+                <a href="map.php" class="logo-link">
                     <i class="fas fa-tint"></i>
                     <span>Fontaines Paris</span>
                 </a>
             </div>
             
             <div class="auth-buttons">
-            <a href="home.php" class="back-to-home">
+            <a href="index.php" class="back-to-home">
                 <i class="fas fa-home"></i>
             </a>
                 <div class="user-profile">
@@ -351,7 +329,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        // Gestion du téléchargement de la photo de profil
         const profilePictureButton = document.getElementById('profile-picture-button');
         const profileImageInput = document.getElementById('profile-image');
         const profilePictureForm = document.getElementById('profile-picture-form');
@@ -362,12 +339,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         profileImageInput.addEventListener('change', function() {
             if (this.files && this.files[0]) {
-                // Soumettre automatiquement le formulaire lorsqu'un fichier est sélectionné
                 profilePictureForm.submit();
             }
         });
         
-        // Gestion du menu déroulant du profil utilisateur
         const userProfile = document.querySelector('.user-profile');
         userProfile.addEventListener('click', function(e) {
             const dropdownMenu = this.querySelector('.dropdown-menu');
@@ -375,7 +350,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             e.stopPropagation();
         });
         
-        // Fermer le menu déroulant si on clique ailleurs
         document.addEventListener('click', function() {
             const dropdownMenu = document.querySelector('.dropdown-menu');
             if (dropdownMenu && dropdownMenu.classList.contains('active')) {
@@ -383,7 +357,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
         
-        // Indicateur de force du mot de passe
         const newPasswordInput = document.getElementById('new_password');
         const passwordStrength = document.getElementById('password-strength');
         const confirmPasswordInput = document.getElementById('confirm_password');
@@ -393,32 +366,26 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             let strength = 0;
             let feedback = '';
             
-            // Vérifier la longueur du mot de passe
             if (password.length >= 8) {
                 strength += 1;
             }
-            
-            // Vérifier s'il contient au moins une lettre majuscule
+
             if (/[A-Z]/.test(password)) {
                 strength += 1;
             }
-            
-            // Vérifier s'il contient au moins une lettre minuscule
+
             if (/[a-z]/.test(password)) {
                 strength += 1;
             }
-            
-            // Vérifier s'il contient au moins un chiffre
+
             if (/[0-9]/.test(password)) {
                 strength += 1;
             }
             
-            // Vérifier s'il contient au moins un caractère spécial
             if (/[^A-Za-z0-9]/.test(password)) {
                 strength += 1;
             }
             
-            // Afficher le niveau de force du mot de passe
             passwordStrength.className = 'password-strength';
             
             if (password.length === 0) {
@@ -436,7 +403,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
         
-        // Vérifier si les mots de passe correspondent
         confirmPasswordInput.addEventListener('input', function() {
             if (this.value !== newPasswordInput.value) {
                 this.setCustomValidity('Les mots de passe ne correspondent pas');
@@ -445,7 +411,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         });
         
-        // Validation du formulaire avant soumission
         const infoForm = document.querySelector('form[name="update_info"]');
         if (infoForm) {
             infoForm.addEventListener('submit', function(e) {
@@ -499,13 +464,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
             });
         }
         
-        // Fonction de validation d'email
         function validateEmail(email) {
             const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return re.test(String(email).toLowerCase());
         }
         
-        // Animation pour les messages d'alerte
         const alerts = document.querySelectorAll('.alert');
         alerts.forEach(alert => {
             setTimeout(() => {
