@@ -244,3 +244,772 @@ h1 {
         font-size: 15px;
     }
 }
+
+/* Styles du header */
+.site-header {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #3498db;
+    font-weight: 600;
+    font-size: 20px;
+    gap: 8px;
+}
+
+.logo-link i {
+    font-size: 24px;
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+    text-decoration: none;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #3498db;
+    border: 2px solid #3498db;
+    padding: 10px 18px;
+}
+
+.btn-outline:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+}
+
+/* Style pour le profil utilisateur */
+.user-profile {
+    position: relative;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 50px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.user-info:hover {
+    background-color: #e9ecef;
+}
+
+.profile-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #3498db;
+}
+
+.profile-image-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #e0f7fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #3498db;
+    color: #3498db;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 105%;
+    right: 0;
+    background-color: white;
+    border-radius: 8px;
+    width: 200px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    display: none;
+    z-index: 10;
+}
+
+.dropdown-menu.show {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s;
+    gap: 10px;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #3498db;
+}
+
+/* Ajustements pour le container principal */
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 90px 20px 20px;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+}
+
+/* Styles pour les formulaires d'authentification */
+.auth-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 90px 20px 20px;
+    background: linear-gradient(135deg, #e0f7fa 0%, #bbdefb 100%);
+}
+
+.auth-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+}
+
+.auth-logo {
+    font-size: 40px;
+    color: #3498db;
+    margin-bottom: 20px;
+}
+
+.auth-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.auth-subtitle {
+    font-size: 16px;
+    color: #7f8c8d;
+    margin-bottom: 25px;
+}
+
+.auth-form {
+    text-align: left;
+}
+
+.form-control {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-control label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #7f8c8d;
+    font-weight: 500;
+}
+
+.form-control input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dfe6e9;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+
+.form-control input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+.form-control .input-icon {
+    position: absolute;
+    top: 36px;
+    left: 15px;
+    color: #b2bec3;
+}
+
+.form-control input[type="text"],
+.form-control input[type="password"],
+.form-control input[type="email"] {
+    padding-left: 40px;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 14px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.auth-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+}
+
+.auth-footer {
+    margin-top: 25px;
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.auth-footer a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Messages d'erreur et de succès */
+.alert {
+    padding: 12px 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert i {
+    font-size: 18px;
+}
+
+.alert-danger {
+    background-color: #fee2e2;
+    color: #ef4444;
+    border-left: 4px solid #ef4444;
+}
+
+.alert-success {
+    background-color: #d1fae5;
+    color: #10b981;
+    border-left: 4px solid #10b981;
+}
+
+.password-strength {
+    margin-top: 8px;
+    font-size: 12px;
+}
+
+.strength-weak {
+    color: #ef4444;
+}
+
+.strength-medium {
+    color: #f59e0b;
+}
+
+.strength-strong {
+    color: #10b981;
+}
+
+/* Styles pour la page de profil */
+.profile-container {
+    padding: 90px 20px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-picture-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 20px;
+}
+
+.profile-picture {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #3498db;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #e0f7fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    color: #3498db;
+    border: 4px solid #3498db;
+}
+
+.picture-edit-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: #3498db;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+}
+
+.picture-edit-button:hover {
+    background-color: #2980b9;
+    transform: scale(1.1);
+}
+
+.profile-form {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-section {
+    margin-bottom: 25px;
+}
+
+.form-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .auth-card, .profile-form {
+        padding: 20px;
+    }
+    
+    .profile-picture-container {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .header-container {
+        padding: 0 15px;
+    }
+    
+    .user-info span {
+        display: none;
+    }
+}
+
+/* Style pour la page de profil */
+.profile-container {
+    max-width: 800px;
+    margin: 40px auto;
+    margin-top: 100px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-header h1 {
+    color: #0077b6;
+    margin-bottom: 5px;
+}
+
+.profile-header p {
+    color: #666;
+}
+
+.form-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+}
+
+.form-section h3 {
+    color: #0077b6;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.profile-picture-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0077b6;
+}
+
+.profile-picture-placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #0077b6;
+}
+
+.profile-picture-placeholder i {
+    font-size: 60px;
+    color: #0077b6;
+}
+
+.picture-edit-button {
+    position: absolute;
+    bottom: 10px;
+    right: calc(50% - 75px);
+    background-color: #0077b6;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.picture-edit-button:hover {
+    background-color: #005b8a;
+}
+
+.picture-edit-button i {
+    color: white;
+    font-size: 18px;
+}
+
+.form-control {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.form-control label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+.form-control input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-control input:focus {
+    border-color: #0077b6;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 119, 182, 0.2);
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 39px;
+    color: #888;
+    font-size: 18px;
+}
+
+.auth-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #0077b6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.auth-button:hover {
+    background-color: #005b8a;
+}
+
+.auth-button i {
+    margin-right: 8px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+.alert i {
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.password-strength {
+    margin-top: 5px;
+    font-size: 14px;
+    padding: 2px 6px;
+    display: inline-block;
+    border-radius: 3px;
+}
+
+.password-strength.weak {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.password-strength.medium {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.password-strength.strong {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Style pour le menu dropdown dans le header */
+.user-profile {
+    position: relative;
+    cursor: pointer;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-image-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-image-placeholder i {
+    color: #0077b6;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 200px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    z-index: 10;
+}
+
+.dropdown-menu.active {
+    display: block;
+}
+
+.dropdown-item {
+    display: block;
+    padding: 12px 15px;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown-item i {
+    margin-right: 8px;
+    color: #0077b6;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 15px;
+        margin: 20px 10px;
+    }
+    
+    .form-section {
+        padding: 15px;
+    }
+}
+
+/* Back button */
+.back-to-home {
+    color: #3498db;
+    font-size: 20px;
+    transition: color 0.2s;
+}
+
+.back-to-home:hover {
+    color: #2980b9;
+}
+
+.delete-account-btn {
+    background-color: #d63031;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(214, 48, 49, 0.4);
+}
+
+.delete-account-btn:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}

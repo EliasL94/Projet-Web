@@ -12,7 +12,9 @@ function getFountains($filters = []) {
     
     if (!empty($filters['search'])) {
         $search = '%' . $filters['search'] . '%';
-        $conditions[] = "(voie LIKE ? OR commune LIKE ? OR type_objet LIKE ? OR modele LIKE ?)";
+        $conditions[] = "(voie LIKE ? OR commune LIKE ? OR type_objet LIKE ? OR modele LIKE ? OR no_voirie_pair LIKE ? OR no_voirie_impair LIKE ?)";
+        $params[] = $search;
+        $params[] = $search;
         $params[] = $search;
         $params[] = $search;
         $params[] = $search;
@@ -156,16 +158,27 @@ if (isset($_GET['action'])) {
                     foreach ($fountains as &$fountain) {
                         $fountainCoords = null;
                         
+                        // Traitement des coordonnées depuis geo_point_2d
                         if (isset($fountain['geo_point_2d'])) {
                             if (is_string($fountain['geo_point_2d'])) {
-                                $fountainCoords = json_decode($fountain['geo_point_2d'], true);
-                            } else {
+                                try {
+                                    $fountainCoords = json_decode($fountain['geo_point_2d'], true);
+                                } catch (Exception $e) {
+                                    error_log("Erreur JSON geo_point_2d: " . $e->getMessage());
+                                }
+                            } elseif (is_array($fountain['geo_point_2d'])) {
                                 $fountainCoords = $fountain['geo_point_2d'];
                             }
                         }
+                        // Traitement des coordonnées depuis geo_shape
                         elseif (isset($fountain['geo_shape'])) {
-                            if (is_string($fountain['geo_shape'])) {
-                                $geoShape = json_decode($fountain['geo_shape'], true);
+                            try {
+                                if (is_string($fountain['geo_shape'])) {
+                                    $geoShape = json_decode($fountain['geo_shape'], true);
+                                } else {
+                                    $geoShape = $fountain['geo_shape'];
+                                }
+                                
                                 if ($geoShape && isset($geoShape['geometry']) && 
                                     isset($geoShape['geometry']['coordinates']) && 
                                     $geoShape['geometry']['type'] === "Point") {
@@ -174,6 +187,8 @@ if (isset($_GET['action'])) {
                                         'lat' => $geoShape['geometry']['coordinates'][1]
                                     ];
                                 }
+                            } catch (Exception $e) {
+                                error_log("Erreur JSON geo_shape: " . $e->getMessage());
                             }
                         }
                         

@@ -1,6 +1,8 @@
 <?php 
     include('data/db.php');
     
+    // Démarrer la session pour gérer la connexion de l'utilisateur
+    session_start();
     
     $userLat = isset($_GET['lat']) ? floatval($_GET['lat']) : null;
     $userLon = isset($_GET['lon']) ? floatval($_GET['lon']) : null;
@@ -23,6 +25,42 @@
     <link rel="stylesheet" href="CSS/home.css" />
 </head>
 <body>
+    <!-- Nouveau header -->
+    <header class="site-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <a href="index.php" class="logo-link">
+                    <i class="fas fa-tint"></i>
+                    <span>Fontaines Paris</span>
+                </a>
+            </div>
+            
+            <div class="auth-buttons">
+                <?php if(isset($_SESSION['user_id'])): ?>
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <span>Bonjour, <?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                            <?php if(isset($_SESSION['profile_image']) && !empty($_SESSION['profile_image'])): ?>
+                                <img src="uploads/profiles/<?php echo htmlspecialchars($_SESSION['profile_image']); ?>" alt="Photo de profil" class="profile-image">
+                            <?php else: ?>
+                                <div class="profile-image-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="dropdown-menu">
+                            <a href="profile.php" class="dropdown-item"><i class="fas fa-user-edit"></i> Mon Profil</a>
+                            <a href="logout.php" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <a href="login.php" class="btn btn-outline"><i class="fas fa-sign-in-alt"></i> Se connecter</a>
+                    <a href="signup.php" class="btn btn-primary"><i class="fas fa-user-plus"></i> S'inscrire</a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </header>
+
     <div class="container">
         <div class="welcome-card">
             <div class="logo">
@@ -200,6 +238,24 @@
                         }
                     })
                     .catch(error => console.error('Erreur lors du chargement des types de fontaines:', error));
+            }
+            
+            // Gestion du menu déroulant du profil utilisateur
+            const userProfile = document.querySelector('.user-profile');
+            if (userProfile) {
+                userProfile.addEventListener('click', function(e) {
+                    const dropdownMenu = this.querySelector('.dropdown-menu');
+                    dropdownMenu.classList.toggle('show');
+                    e.stopPropagation();
+                });
+                
+                // Fermer le menu si l'utilisateur clique ailleurs
+                document.addEventListener('click', function() {
+                    const dropdownMenu = document.querySelector('.dropdown-menu');
+                    if (dropdownMenu && dropdownMenu.classList.contains('show')) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
             }
         });
     </script>
